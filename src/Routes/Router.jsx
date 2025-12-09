@@ -8,6 +8,11 @@ import ErrorApps from "../Pages/Error/Error";
 import AuthLayout from "../Layouts/AuthLayout/AuthLayout";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Register";
+import PrivateRoute from "./PrivateRoute";
+import DashboardLayout from "../Layouts/DashboardLayout/DashboardLayout";
+import MyIssues from "../Pages/Dashboard/MyIssues/MyIssues";
+import ReportIssue from "../Pages/Dashboard/ReportIssue/ReportIssue";
+import MyProfile from "../Pages/Dashboard/MyProfile/MyProfile";
 
 export const router = createBrowserRouter([
   {
@@ -46,5 +51,24 @@ export const router = createBrowserRouter([
             Component: Register
         }
     ]
+  },
+  {
+    path: '/dashboard',
+    element: <PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
+    children: [
+        {
+            path: 'my-issues',
+            Component: MyIssues
+        },
+        {
+            path: 'report-issue',
+            Component: ReportIssue
+        },
+        {
+            path: 'my-profile',
+            Component: MyProfile
+        }
+    ]
   }
+
 ]);

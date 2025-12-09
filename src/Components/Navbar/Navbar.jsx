@@ -114,20 +114,23 @@ const Navbar = () => {
 
                 <div className="divider"></div>
 
-                <li>
+                <div>
                   <button
                     className="btn btn-primary w-full text-black"
                     onClick={handleLogout}
                   >
                     Logout
                   </button>
+                  <Link to={'/dashboard/my-issues'}>
                   <button
                     className="btn btn-primary w-full text-black mt-2"
                     
                   >
                     Dashboard
                   </button>
-                </li>
+                  </Link>
+                  
+                </div>
               </ul>
             </div>
           )}
