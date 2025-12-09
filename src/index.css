@@ -8,6 +8,11 @@ a.active{
   color: black;
 }
 
+.dashboard a.active{
+  background-color: #297547;
+  color: #CAEB66; 
+}
+
 @plugin "daisyui/theme" {
   name: "light";
   default: true;

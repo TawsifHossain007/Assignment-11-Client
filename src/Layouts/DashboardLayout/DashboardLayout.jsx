@@ -1,16 +1,17 @@
 import React from "react";
 import { AiOutlineIssuesClose } from "react-icons/ai";
+import { CgProfile } from "react-icons/cg";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { Link, NavLink, Outlet } from "react-router";
 
 const DashboardLayout = () => {
   return (
     <div className=" bg-green-50">
-      <div className="drawer lg:drawer-open">
+      <div className=" dashboard  drawer lg:drawer-open">
         <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
           {/* Navbar */}
-          <nav className="navbar w-full bg-primary">
+          <nav className="navbarw-full bg-linear-to-r from-green-400 via-green-600 to-green-700">
             <label
               htmlFor="my-drawer-4"
               aria-label="open sidebar"
@@ -98,6 +99,19 @@ const DashboardLayout = () => {
                     stroke="currentColor" className="my-1.5 inline-block size-4"
                   </MdReportGmailerrorred>
                   <span className="is-drawer-close:hidden">Report Issues</span>
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="My Profile"
+                  to={"/dashboard/my-profile"}
+                >
+                  <CgProfile>
+                    stroke="currentColor" className="my-1.5 inline-block size-4"
+                  </CgProfile>
+                  <span className="is-drawer-close:hidden">My Profile</span>
                 </NavLink>
               </li>
 
