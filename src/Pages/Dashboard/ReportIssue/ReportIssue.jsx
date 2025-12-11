@@ -30,7 +30,6 @@ const ReportIssue = () => {
     const imgRes = await axios.post(ImageApiURL, formData);
     const imageUrl = imgRes.data.data.url;
 
-    // Prepare issue data
     const issueData = {
       reporterName : data.reporterName,
       reporterEmail: data.reporterEmail, 
@@ -52,8 +51,7 @@ const ReportIssue = () => {
     });
     swalWithBootstrapButtons
       .fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: "Confirm Report?",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, report issue!",

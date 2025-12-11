@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useRef, useState } from "react";
 import useAuth from "../../../hooks/useAuth/useAuth";
 import useAxiosSecure from "../../../hooks/useAuth/useAxiosSecure";
 import Swal from "sweetalert2";
-import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import axios from "axios";
 
 const MyIssues = () => {
   const axiosSecure = useAxiosSecure();
@@ -15,6 +16,15 @@ const MyIssues = () => {
       return res.data;
     },
   });
+
+  const {
+    reset,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const [selectedIssues, setSelectedIssues] = useState(null);
 
   const handelDeleteIssue = (id) => {
     console.log("delete id:", id);
@@ -62,6 +72,56 @@ const MyIssues = () => {
       });
   };
 
+  const handleUpdate = async (data) => {
+    const imageFile = data.photo[0];
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
+    const ImageApiURL = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_Image_Host_Key
+    }`;
+
+    const imgRes = await axios.post(ImageApiURL, formData);
+    const imageUrl = imgRes.data.data.url;
+
+    // Prepare issue data
+    const issueData = {
+      reporterName: data.reporterName,
+      reporterEmail: data.reporterEmail,
+      title: data.title,
+      description: data.description,
+      category: data.category,
+      image: imageUrl,
+      IssueStatus: "Pending",
+      location: data.location,
+      date: new Date().toISOString(),
+    };
+
+    axiosSecure
+      .patch(`/issues/${selectedIssues._id}`, issueData)
+      .then((res) => {
+        if (res.data.modifiedCount > 0) {
+          Swal.fire({
+            position: "Center",
+            icon: "success",
+            title: "Your Report Has Been Updated",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          issueModalRef.current.close();
+          refetch();
+        }
+      });
+  };
+
+  const issueModalRef = useRef();
+
+  const openIssueEditModal = (issue) => {
+    setSelectedIssues(issue);
+    reset(issue);
+    issueModalRef.current.showModal();
+  };
+
   return (
     <div className=" my-20">
       <h1>My Issues</h1>
@@ -95,11 +155,12 @@ const MyIssues = () => {
                     Delete
                   </button>
                   {issue.IssueStatus === "Pending" && (
-                    <Link to={"/dashboard/edit-issue"}>
-                      <button className="btn btn-primary text-black mx-2">
-                        Edit
-                      </button>
-                    </Link>
+                    <button
+                      onClick={() => openIssueEditModal(issue)}
+                      className="btn btn-primary text-black mx-2"
+                    >
+                      Edit
+                    </button>
                   )}
 
                   <button className="btn mx-2 btn-primary text-black">
@@ -112,19 +173,135 @@ const MyIssues = () => {
         </table>
       </div>
       {/* Open the modal using document.getElementById('ID').showModal() method */}
-<button className="btn" onClick={()=>document.getElementById('my_modal_5').showModal()}>open modal</button>
-<dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-  <div className="modal-box">
-    <h3 className="font-bold text-lg">Hello!</h3>
-    <p className="py-4">Press ESC key or click the button below to close</p>
-    <div className="modal-action">
-      <form method="dialog">
-        {/* if there is a button in form, it will close the modal */}
-        <button className="btn">Close</button>
-      </form>
-    </div>
-  </div>
-</dialog>
+      <dialog
+        ref={issueModalRef}
+        className="modal modal-bottom sm:modal-middle"
+      >
+        <div className="modal-box">
+          <div>
+            <div className=" card bg-white  w-full mx-auto max-w-lg shadow-2xl p-6">
+              <h3 className="text-center font-semibold text-3xl text-secondary">
+                Update Issue
+              </h3>
+              <p className="text-center pt-3">
+                Help us keep the community better
+              </p>
+
+              <form className="card-body" onSubmit={handleSubmit(handleUpdate)}>
+                <fieldset className="fieldset">
+                  {/* reporter name */}
+                  <label className="label">Reporter Name</label>
+                  <input
+                    type="text"
+                    {...register("reporterName")}
+                    readOnly
+                    defaultValue={user?.displayName}
+                    className="input w-full"
+                    placeholder="Sender Name"
+                  />
+
+                  {/* reporter email */}
+                  <label className="label">Reporter Email</label>
+                  <input
+                    type="text"
+                    {...register("reporterEmail")}
+                    defaultValue={user?.email}
+                    readOnly
+                    className="input w-full"
+                    placeholder="Sender Email"
+                  />
+                  {/* TITLE */}
+                  <label className="label">Title</label>
+                  <input
+                    defaultValue={selectedIssues?.title}
+                    type="text"
+                    className="input bg-white"
+                    placeholder="Issue Title"
+                    {...register("title", { required: true })}
+                  />
+                  {errors.title?.type === "required" && (
+                    <p className="text-red-200 text-sm font-medium mt-1">
+                      Title is required
+                    </p>
+                  )}
+
+                  {/* DESCRIPTION */}
+                  <label className="label">Description</label>
+                  <textarea
+                    defaultValue={selectedIssues?.description}
+                    className="textarea bg-white"
+                    placeholder="Describe the issue..."
+                    {...register("description", { required: true })}
+                  ></textarea>
+                  {errors.description?.type === "required" && (
+                    <p className="text-red-200 text-sm font-medium mt-1">
+                      Description is required
+                    </p>
+                  )}
+
+                  {/* CATEGORY */}
+                  <label className="label">Category</label>
+                  <select
+                    defaultValue={selectedIssues?.category}
+                    className="select bg-white"
+                    {...register("category", { required: true })}
+                  >
+                    <option value="">Select a category</option>
+                    <option value="Road Damage">Road Damage</option>
+                    <option value="Water Leakage">Water Leakage</option>
+                    <option value="Garbage Overflow">Garbage Overflow</option>
+                    <option value="Streetlight Issue">Streetlight Issue</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  {errors.category?.type === "required" && (
+                    <p className="text-red-200 text-sm font-medium mt-1">
+                      Category is required
+                    </p>
+                  )}
+
+                  {/* PHOTO */}
+                  <label className="label">Upload Image</label>
+                  <input
+                    type="file"
+                    className="file-input bg-white"
+                    {...register("photo", { required: true })}
+                  />
+                  {errors.photo?.type === "required" && (
+                    <p className="text-red-200 text-sm font-medium mt-1">
+                      Image is required
+                    </p>
+                  )}
+
+                  {/* LOCATION */}
+                  <label className="label">Location</label>
+                  <input
+                    defaultValue={selectedIssues?.location}
+                    type="text"
+                    className="input bg-white"
+                    placeholder="Enter location"
+                    {...register("location", { required: true })}
+                  />
+                  {errors.location?.type === "required" && (
+                    <p className="text-red-200 text-sm font-medium mt-1">
+                      Location is required
+                    </p>
+                  )}
+
+                  <button type="submit" className="btn btn-neutral mt-4">
+                    Update Issue
+                  </button>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };
