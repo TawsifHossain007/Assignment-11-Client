@@ -1,6 +1,7 @@
 import React from "react";
 import { AiOutlineIssuesClose } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
+import { FaRegUserCircle, FaUsers } from "react-icons/fa";
 import { MdReportGmailerrorred } from "react-icons/md";
 import { Link, NavLink, Outlet } from "react-router";
 
@@ -112,6 +113,19 @@ const DashboardLayout = () => {
                     stroke="currentColor" className="my-1.5 inline-block size-4"
                   </CgProfile>
                   <span className="is-drawer-close:hidden">My Profile</span>
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="User Management"
+                  to={"/dashboard/user-management"}
+                >
+                  <FaUsers>
+                    stroke="currentColor" className="my-1.5 inline-block size-4"
+                  </FaUsers>
+                  <span className="is-drawer-close:hidden">User Management</span>
                 </NavLink>
               </li>
 

@@ -3,16 +3,18 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth/useAuth";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../hooks/useAuth/useAxiosSecure";
 
 const SocialLogin = () => {
   const { signInGoogle } = useAuth();
 
   const location = useLocation();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure()
 
   const handleGoogleSignIn = () => {
     signInGoogle()
-      .then(() => {
+      .then((res) => {
         Swal.fire({
           position: "center",
           icon: "success",
@@ -21,6 +23,17 @@ const SocialLogin = () => {
           timer: 1500,
         });
         navigate(location?.state || "/");
+
+         //create user in database
+          const userInfo = {
+            email : res.user.email,
+            displayName : res.user.displayName,
+             photoURL: res.user.photoURL,
+          }
+
+          axiosSecure.post("/users",userInfo)
+          .then(()=>{})
+          .catch(()=>{})
       })
       .catch((err) => {
         console.log(err);

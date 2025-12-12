@@ -71,9 +71,9 @@ const Navbar = () => {
             </ul>
           </div>
 
-          <a className="btn btn-ghost text-xl">
+          <span className="btn btn-ghost text-xl">
             <Logo />
-          </a>
+          </span>
         </div>
 
         {/* CENTER */}

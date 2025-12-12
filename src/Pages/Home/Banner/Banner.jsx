@@ -55,7 +55,7 @@ const Banner = () => {
         </p>
         <div className="flex justify-center lg:justify-start gap-4">
           <button className="bg-green-700 text-white px-6 py-3 rounded-lg hover:bg-green-800 transition">
-            <Link >Report an Issue</Link>
+            <Link to={"/dashboard/report-issue"}>Report an Issue</Link>
             
           </button>
           <button className="bg-white text-green-700 px-6 py-3 rounded-lg hover:bg-green-100 transition">

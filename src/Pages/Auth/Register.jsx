@@ -6,6 +6,7 @@ import SocialLogin from "./SocialLogin";
 import useAuth from "../../hooks/useAuth/useAuth";
 import Swal from "sweetalert2";
 import axios from "axios";
+import useAxiosSecure from "../../hooks/useAuth/useAxiosSecure";
 
 const Register = () => {
   const {
@@ -16,6 +17,7 @@ const Register = () => {
 
   const navigate = useNavigate();
   const { registerUser, updateUserProfile } = useAuth();
+  const axiosSecure = useAxiosSecure()
 
   const handleRegistration = (data) => {
     const profileImg = data.photo[0];
@@ -29,9 +31,26 @@ const Register = () => {
           import.meta.env.VITE_Image_Host_Key
         }`;
         axios.post(ImageApiURL, formdata).then((res) => {
+
+          const photoURL = res.data.data.url;
+
+          //create user in database
+          const userInfo = {
+            email : data.email,
+            displayName : data.name,
+             photoURL: photoURL,
+          }
+
+          axiosSecure.post("/users",userInfo)
+          .then(()=>{})
+          .catch(err=>{
+            console.log(err)
+          })
+
+          //update user profile in firebase
           const userProfile = {
             displayName: data.name,
-            photoURL: res.data.data.url,
+            photoURL: photoURL,
           };
 
           updateUserProfile(userProfile)
