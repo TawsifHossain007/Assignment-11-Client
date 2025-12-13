@@ -62,7 +62,7 @@ const MyProfile = () => {
                   ? "badge badge-success text-white"
                   : crntuser?.status === "Pending"
                   ? "badge badge-warning"
-                  : crntuser?.status === "Banned"
+                  : crntuser?.status === "Blocked"
                   ? "badge badge-error text-white"
                   : "badge badge-outline"
               }
