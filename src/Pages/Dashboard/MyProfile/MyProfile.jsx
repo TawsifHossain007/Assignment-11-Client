@@ -81,8 +81,8 @@ const MyProfile = () => {
               <strong>Email:</strong> {crntuser?.email}
             </p>
             <p>
-              <strong>Role:</strong>{" "}
-              {crntuser?.status === "Premium" ? "Premium User" : "Regular User"}
+              <strong>Role: {crntuser.role}</strong>{" "}
+              
             </p>
             <p>
               <strong>Joined:</strong>{" "}

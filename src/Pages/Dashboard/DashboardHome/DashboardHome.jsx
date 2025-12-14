@@ -14,7 +14,7 @@ const DashboardHome = () => {
         </div>
     )
 }
-
+    console.log(role)
     if(role === 'admin'){
         return <AdminDashboardHome></AdminDashboardHome>
     }
