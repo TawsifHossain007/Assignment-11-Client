@@ -2,17 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import useAxiosSecure from "../../hooks/useAuth/useAxiosSecure";
 import IssueCard from "./IssueCard";
+import Loading from "../../Components/Loading/Loading";
 
 const AllIssues = () => {
 
     const axiosSecure = useAxiosSecure()
-    const {data: issues = []} = useQuery({
+    const {data: issues = [], isLoading} = useQuery({
         queryKey: ['all-issues'],
         queryFn: async()=> {
             const res = await axiosSecure.get('/issues')
             return res.data
         }
     })
+
+    if(isLoading){
+        return <Loading></Loading>
+    }
 
   return (
     <div className="min-h-screen max-w-11/12 mx-auto mb-20">

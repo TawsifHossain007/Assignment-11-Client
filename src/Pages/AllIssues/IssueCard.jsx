@@ -15,7 +15,7 @@ const IssueCard = ({ issue }) => {
 
   return (
    <div className="card rounded-2xl overflow-hidden 
-  bg-gradient-to-br from-white via-green-50 to-green-100
+  bg-linear-to-br from-white via-green-100 to-green-200
   shadow-md hover:shadow-xl transition-all duration-300">
 
   {/* Image */}
@@ -75,7 +75,7 @@ const IssueCard = ({ issue }) => {
 
       {/* View Details */}
       <Link
-        to={`/issues/${_id}`}
+        to={`/issue-details/${_id}`}
         className="btn btn-sm btn-outline rounded-full border-green-600 text-green-700 hover:bg-green-600 hover:text-white"
       >
         View Details

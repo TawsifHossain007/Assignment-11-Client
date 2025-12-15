@@ -5,6 +5,7 @@ import useAxiosSecure from "../../../hooks/useAuth/useAxiosSecure";
 import Swal from "sweetalert2";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { Link } from "react-router";
 
 const MyIssues = () => {
   const axiosSecure = useAxiosSecure();
@@ -161,10 +162,12 @@ const MyIssues = () => {
                       Edit
                     </button>
                   )}
-
-                  <button className="btn mx-2 btn-primary text-black">
+                  <Link to={`/issue-details/${issue._id}`}>
+                      <button className="btn mx-2 btn-primary text-black">
                     View Details
                   </button>
+                  </Link>
+                  
                 </td>
               </tr>
             ))}

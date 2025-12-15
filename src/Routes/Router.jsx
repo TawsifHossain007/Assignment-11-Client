@@ -16,6 +16,7 @@ import MyProfile from "../Pages/Dashboard/MyProfile/MyProfile";
 import UserManagement from "../Pages/Dashboard/UserManagement/UserManagement";
 import DashboardHome from "../Pages/Dashboard/DashboardHome/DashboardHome";
 import StaffManagement from "../Pages/Dashboard/StaffManagement/StaffManagement";
+import IssueDetails from "../Pages/IssueDetails/IssueDetails";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
         {
             path: 'all-issues',
             Component: AllIssues
+        },
+        {
+            path: '/issue-details/:id',
+            element: <PrivateRoute><IssueDetails></IssueDetails></PrivateRoute>
         },
         {
             path: 'aboutUs',
