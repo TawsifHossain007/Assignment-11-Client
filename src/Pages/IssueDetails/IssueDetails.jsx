@@ -7,7 +7,15 @@ import useAuth from "../../hooks/useAuth/useAuth";
 import { useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../Components/Loading/Loading";
-import { FaArrowUp, FaBolt, FaClock, FaEdit, FaMapMarkerAlt, FaTrash, FaUser } from "react-icons/fa";
+import {
+  FaArrowUp,
+  FaBolt,
+  FaClock,
+  FaEdit,
+  FaMapMarkerAlt,
+  FaTrash,
+  FaUser,
+} from "react-icons/fa";
 
 const IssueDetails = () => {
   const { id } = useParams();
@@ -123,19 +131,21 @@ const IssueDetails = () => {
       date: new Date().toISOString(),
     };
 
-    axiosSecure.patch(`/issues/${selectedIssues._id}`, issueData).then((res) => {
-      if (res.data.modifiedCount > 0) {
-        Swal.fire({
-          position: "Center",
-          icon: "success",
-          title: "Your Report Has Been Updated",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        issueModalRef.current.close();
-        refetch();
-      }
-    });
+    axiosSecure
+      .patch(`/issues/${selectedIssues._id}`, issueData)
+      .then((res) => {
+        if (res.data.modifiedCount > 0) {
+          Swal.fire({
+            position: "Center",
+            icon: "success",
+            title: "Your Report Has Been Updated",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          issueModalRef.current.close();
+          refetch();
+        }
+      });
   };
 
   return (
@@ -220,7 +230,10 @@ const IssueDetails = () => {
               <>
                 {IssueStatus === "Pending" && (
                   <>
-                    <button onClick={()=>openIssueEditModal(issue)} className="btn btn-outline btn-success gap-2">
+                    <button
+                      onClick={() => openIssueEditModal(issue)}
+                      className="btn btn-outline btn-success gap-2"
+                    >
                       <FaEdit /> Edit
                     </button>
                   </>
@@ -232,13 +245,13 @@ const IssueDetails = () => {
                 >
                   <FaTrash /> Delete
                 </button>
-              </>
-            )}
 
-            {Priority !== "High" && (
-              <button className="btn btn-outline btn-warning gap-2">
-                <FaBolt /> Boost Priority (৳100)
-              </button>
+                {Priority !== "High" && (
+                  <button className="btn btn-outline btn-warning gap-2">
+                    <FaBolt /> Boost Priority (৳100)
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>

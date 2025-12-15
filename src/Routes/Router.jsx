@@ -17,6 +17,7 @@ import UserManagement from "../Pages/Dashboard/UserManagement/UserManagement";
 import DashboardHome from "../Pages/Dashboard/DashboardHome/DashboardHome";
 import StaffManagement from "../Pages/Dashboard/StaffManagement/StaffManagement";
 import IssueDetails from "../Pages/IssueDetails/IssueDetails";
+import IssueManagement from "../Pages/Dashboard/IssueManagement/IssueManagement";
 
 export const router = createBrowserRouter([
   {
@@ -87,6 +88,10 @@ export const router = createBrowserRouter([
         {
             path: 'staff-management',
             Component: StaffManagement
+        },
+        {
+            path: 'issue-management',
+            Component: IssueManagement
         }
     ]
   }

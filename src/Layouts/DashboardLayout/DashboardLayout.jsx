@@ -1,7 +1,7 @@
 import React from "react";
 import { AiOutlineIssuesClose } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
-import { FaArrowLeft, FaHome, FaRegUserCircle, FaUsers } from "react-icons/fa";
+import { FaArrowLeft, FaFile, FaHome, FaRegUserCircle, FaUserCircle, FaUsers } from "react-icons/fa";
 import { MdAssuredWorkload, MdReportGmailerrorred } from "react-icons/md";
 import { Link, NavLink, Outlet } from "react-router";
 
@@ -81,6 +81,20 @@ const DashboardLayout = () => {
               <li>
                 <NavLink
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="Issue Management"
+                  to={"/dashboard/issue-management"}
+                  end
+                >
+                  <FaFile>
+                    stroke="currentColor" className="my-1.5 inline-block size-4"
+                  </FaFile>
+                  <span className="is-drawer-close:hidden">Issue Management</span>
+                </NavLink>
+              </li>
+
+              <li>
+                <NavLink
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                   data-tip="My Issues"
                   to={"/dashboard/my-issues"}
                 >
@@ -91,7 +105,22 @@ const DashboardLayout = () => {
                 </NavLink>
               </li>
 
+            
+
               <li>
+                <NavLink
+                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                  data-tip="My Profile"
+                  to={"/dashboard/my-profile"}
+                >
+                  <FaUserCircle>
+                    stroke="currentColor" className="my-1.5 inline-block size-4"
+                  </FaUserCircle>
+                  <span className="is-drawer-close:hidden">My Profile</span>
+                </NavLink>
+              </li>
+
+                <li>
                 <NavLink
                   className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
                   data-tip="Report Issues"
@@ -101,19 +130,6 @@ const DashboardLayout = () => {
                     stroke="currentColor" className="my-1.5 inline-block size-4"
                   </MdReportGmailerrorred>
                   <span className="is-drawer-close:hidden">Report Issues</span>
-                </NavLink>
-              </li>
-
-              <li>
-                <NavLink
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="My Profile"
-                  to={"/dashboard/my-profile"}
-                >
-                  <CgProfile>
-                    stroke="currentColor" className="my-1.5 inline-block size-4"
-                  </CgProfile>
-                  <span className="is-drawer-close:hidden">My Profile</span>
                 </NavLink>
               </li>
 
