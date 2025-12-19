@@ -19,6 +19,12 @@ import StaffManagement from "../Pages/Dashboard/StaffManagement/StaffManagement"
 import IssueDetails from "../Pages/IssueDetails/IssueDetails";
 import IssueManagement from "../Pages/Dashboard/IssueManagement/IssueManagement";
 import AssignedIssue from "../Pages/Dashboard/AssignedIssue/AssignedIssue";
+import AdminRoutes from "./AdminRoutes";
+import StaffRoutes from "./StaffRoutes";
+import PaymentSuccess from "../Components/Payment-Success/PaymentSuccess";
+import PaymentCancel from "../Components/Payment-Cancelled/PaymentCancel";
+import UserRoutes from "./UserRoutes";
+import BoostPaymentSuccess from "../Components/Payment-Success/BoostPaymentSuccess";
 
 export const router = createBrowserRouter([
   {
@@ -72,11 +78,11 @@ export const router = createBrowserRouter([
         },
         {
             path: 'my-issues',
-            Component: MyIssues
+            element: <UserRoutes><MyIssues></MyIssues></UserRoutes>
         },
         {
             path: 'report-issue',
-            Component: ReportIssue
+            element: <UserRoutes><ReportIssue></ReportIssue></UserRoutes>
         },
         {
             path: 'my-profile',
@@ -84,19 +90,31 @@ export const router = createBrowserRouter([
         },
         {
             path: 'user-management',
-            Component: UserManagement
+            element: <AdminRoutes><UserManagement></UserManagement></AdminRoutes>
         },
         {
             path: 'staff-management',
-            Component: StaffManagement
+            element: <AdminRoutes><StaffManagement></StaffManagement></AdminRoutes>
         },
         {
             path: 'issue-management',
-            Component: IssueManagement
+            element: <AdminRoutes><IssueManagement></IssueManagement></AdminRoutes>
         },
         {
             path: 'assigned-issues',
-            Component: AssignedIssue
+            element: <StaffRoutes><AssignedIssue></AssignedIssue></StaffRoutes>
+        },
+        {
+            path: 'payment-success',
+            Component: PaymentSuccess
+        },
+        {
+            path: 'payment-cancel',
+            Component: PaymentCancel
+        },
+        {
+            path: 'boost-payment-success',
+            Component: BoostPaymentSuccess
         }
     ]
   }

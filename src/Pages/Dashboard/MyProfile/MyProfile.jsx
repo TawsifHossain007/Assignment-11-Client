@@ -4,15 +4,16 @@ import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAuth/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth/useAuth";
 import { useQuery } from "@tanstack/react-query";
+import useRole from "../../../hooks/useRole/useRole";
 
 const MyProfile = () => {
   const { user } = useAuth();
   const axiosSecure = useAxiosSecure();
-
+  const { role } = useRole();
   const { data: crntuser = [] } = useQuery({
     queryKey: ["my-profile", user?.email],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/users/${user?.email}`);
+      const res = await axiosSecure.get(`/users/${user?.email}/role`);
       return res.data;
     },
   });
@@ -27,7 +28,18 @@ const MyProfile = () => {
       cancelButtonText: "Cancel",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log("Payment er work here");
+        const paymentInfo = {
+          reporterName: user.displayName,
+          reporterEmail: user.email,
+          amount: 7.96,
+          subscriptionType: "Profile Subscription",
+        };
+
+        const res = await axiosSecure.post(
+          `/create-checkout-session`,
+          paymentInfo
+        );
+        window.location.href = res.data.url;
       }
     });
   };
@@ -99,22 +111,26 @@ const MyProfile = () => {
           <div className="w-full border-t my-6 border-green-200"></div>
 
           {/* Buttons */}
-          <div className="flex gap-4">
-            {/* Update Profile Button */}
-            <button className="btn bg-green-600 text-white hover:bg-green-700">
-              Update Profile
-            </button>
+          {role === "user" && (
+            <>
+              <div className="flex gap-4">
+                {/* Update Profile Button */}
+                <button className="btn bg-green-600 text-white hover:bg-green-700">
+                  Update Profile
+                </button>
 
-            {/* Subscribe Button */}
-            {crntuser?.status !== "Premium" && (
-              <button
-                onClick={handleSubscribe}
-                className="btn bg-yellow-500 text-black hover:bg-yellow-600"
-              >
-                Subscribe 1000৳
-              </button>
-            )}
-          </div>
+                {/* Subscribe Button */}
+                {crntuser?.status !== "Premium" && (
+                  <button
+                    onClick={handleSubscribe}
+                    className="btn bg-yellow-500 text-black hover:bg-yellow-600"
+                  >
+                    Subscribe 1000৳
+                  </button>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

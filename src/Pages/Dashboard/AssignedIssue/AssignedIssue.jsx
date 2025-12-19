@@ -18,7 +18,9 @@ const AssignedIssue = () => {
   });
 
   const handleStatusChange = async (issueId, newStatus) => {
-    const result = await axiosSecure.patch(`/issues/${issueId}/status`, {IssueStatus : newStatus});
+    const result = await axiosSecure.patch(`/issues/${issueId}/status`, {
+      IssueStatus: newStatus,
+    });
 
     if (result.data.modifiedCount) {
       refetch();
@@ -63,6 +65,7 @@ const AssignedIssue = () => {
       ${issue.IssueStatus === "Working" && "badge-primary"}
       ${issue.IssueStatus === "Resolved" && "badge-success"}
       ${issue.IssueStatus === "Closed" && "badge-neutral"}
+      ${issue.IssueStatus === "Rejected" && "badge-error"}
     `}
                   >
                     {issue.IssueStatus}
@@ -92,16 +95,40 @@ const AssignedIssue = () => {
                         className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
                       >
                         <li>
-                          <button onClick={()=>handleStatusChange(issue._id, "In Progress")}>In Progress</button>
+                          <button
+                            onClick={() =>
+                              handleStatusChange(issue._id, "In Progress")
+                            }
+                          >
+                            In Progress
+                          </button>
                         </li>
                         <li>
-                          <button onClick={()=>handleStatusChange(issue._id, "Working")}>Working</button>
+                          <button
+                            onClick={() =>
+                              handleStatusChange(issue._id, "Working")
+                            }
+                          >
+                            Working
+                          </button>
                         </li>
                         <li>
-                          <button onClick={()=>handleStatusChange(issue._id, "Resolved")}>Resolved</button>
+                          <button
+                            onClick={() =>
+                              handleStatusChange(issue._id, "Resolved")
+                            }
+                          >
+                            Resolved
+                          </button>
                         </li>
                         <li>
-                          <button onClick={()=>handleStatusChange(issue._id, "Closed")}>Closed</button>
+                          <button
+                            onClick={() =>
+                              handleStatusChange(issue._id, "Closed")
+                            }
+                          >
+                            Closed
+                          </button>
                         </li>
                       </ul>
                     </div>

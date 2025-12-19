@@ -121,7 +121,7 @@ const Navbar = () => {
                   >
                     Logout
                   </button>
-                  <Link to={'/dashboard/my-issues'}>
+                  <Link to={'/dashboard'}>
                   <button
                     className="btn btn-primary w-full text-black mt-2"
                     

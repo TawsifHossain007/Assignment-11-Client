@@ -150,7 +150,7 @@ const ReportIssue = () => {
                   {...register("title", { required: true })}
                 />
                 {errors.title?.type === "required" && (
-                  <p className="text-red-200 text-sm font-medium mt-1">
+                  <p className="text-red-500 text-sm font-medium mt-1">
                     Title is required
                   </p>
                 )}
@@ -163,7 +163,7 @@ const ReportIssue = () => {
                   {...register("description", { required: true })}
                 ></textarea>
                 {errors.description?.type === "required" && (
-                  <p className="text-red-200 text-sm font-medium mt-1">
+                  <p className="text-red-500 text-sm font-medium mt-1">
                     Description is required
                   </p>
                 )}
@@ -182,7 +182,7 @@ const ReportIssue = () => {
                   <option value="Other">Other</option>
                 </select>
                 {errors.category?.type === "required" && (
-                  <p className="text-red-200 text-sm font-medium mt-1">
+                  <p className="text-red-500 text-sm font-medium mt-1">
                     Category is required
                   </p>
                 )}
@@ -195,7 +195,7 @@ const ReportIssue = () => {
                   {...register("photo", { required: true })}
                 />
                 {errors.photo?.type === "required" && (
-                  <p className="text-red-200 text-sm font-medium mt-1">
+                  <p className="text-red-500 text-sm font-medium mt-1">
                     Image is required
                   </p>
                 )}
@@ -209,7 +209,7 @@ const ReportIssue = () => {
                   {...register("location", { required: true })}
                 />
                 {errors.location?.type === "required" && (
-                  <p className="text-red-200 text-sm font-medium mt-1">
+                  <p className="text-red-500 text-sm font-medium mt-1">
                     Location is required
                   </p>
                 )}

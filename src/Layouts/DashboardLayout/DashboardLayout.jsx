@@ -1,13 +1,22 @@
 import React from "react";
 import { AiOutlineIssuesClose } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
-import { FaArrowLeft, FaFile, FaHome, FaRegUserCircle, FaUserCircle, FaUsers } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaFile,
+  FaHome,
+  FaRegUserCircle,
+  FaUserCircle,
+  FaUsers,
+} from "react-icons/fa";
 import { IoBriefcase } from "react-icons/io5";
 import { MdAssuredWorkload, MdReportGmailerrorred } from "react-icons/md";
 import { PiWarningCircleFill } from "react-icons/pi";
 import { Link, NavLink, Outlet } from "react-router";
+import useRole from "../../hooks/useRole/useRole";
 
 const DashboardLayout = () => {
+  const { role } = useRole();
   return (
     <div className=" bg-green-50">
       <div className=" dashboard  drawer lg:drawer-open">
@@ -79,35 +88,116 @@ const DashboardLayout = () => {
                   <span className="is-drawer-close:hidden">Dashboard Home</span>
                 </NavLink>
               </li>
+              {/* User Links */}
+              {role === "user" && (
+                <>
+                  <li>
+                    <NavLink
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="My Issues"
+                      to={"/dashboard/my-issues"}
+                    >
+                      <AiOutlineIssuesClose>
+                        stroke="currentColor" className="my-1.5 inline-block
+                        size-4"
+                      </AiOutlineIssuesClose>
+                      <span className="is-drawer-close:hidden">My Issues</span>
+                    </NavLink>
+                  </li>
 
-              <li>
-                <NavLink
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Issue Management"
-                  to={"/dashboard/issue-management"}
-                  end
-                >
-                  <FaFile>
-                    stroke="currentColor" className="my-1.5 inline-block size-4"
-                  </FaFile>
-                  <span className="is-drawer-close:hidden">Issue Management</span>
-                </NavLink>
-              </li>
+                  <li>
+                    <NavLink
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="Report Issues"
+                      to={"/dashboard/report-issue"}
+                    >
+                      <PiWarningCircleFill>
+                        stroke="currentColor" className="my-1.5 inline-block
+                        size-4"
+                      </PiWarningCircleFill>
+                      <span className="is-drawer-close:hidden">
+                        Report Issues
+                      </span>
+                    </NavLink>
+                  </li>
+                </>
+              )}
+              
 
-              <li>
-                <NavLink
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="My Issues"
-                  to={"/dashboard/my-issues"}
-                >
-                  <AiOutlineIssuesClose>
-                    stroke="currentColor" className="my-1.5 inline-block size-4"
-                  </AiOutlineIssuesClose>
-                  <span className="is-drawer-close:hidden">My Issues</span>
-                </NavLink>
-              </li>
+              {/* Admin Links */}
+              {role === "admin" && (
+                <>
+                  <li>
+                    <NavLink
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="Issue Management"
+                      to={"/dashboard/issue-management"}
+                      end
+                    >
+                      <FaFile>
+                        stroke="currentColor" className="my-1.5 inline-block
+                        size-4"
+                      </FaFile>
+                      <span className="is-drawer-close:hidden">
+                        Issue Management
+                      </span>
+                    </NavLink>
+                  </li>
 
-            
+                  <li>
+                    <NavLink
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="User Management"
+                      to={"/dashboard/user-management"}
+                    >
+                      <FaUsers>
+                        stroke="currentColor" className="my-1.5 inline-block
+                        size-4"
+                      </FaUsers>
+                      <span className="is-drawer-close:hidden">
+                        User Management
+                      </span>
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="Staff Management"
+                      to={"/dashboard/staff-management"}
+                    >
+                      <MdAssuredWorkload>
+                        stroke="currentColor" className="my-1.5 inline-block
+                        size-4"
+                      </MdAssuredWorkload>
+                      <span className="is-drawer-close:hidden">
+                        Staff Management
+                      </span>
+                    </NavLink>
+                  </li>
+                </>
+              )}
+
+              {/* Staff Links */}
+              {role === "staff" && (
+                <>
+                  <li>
+                    <NavLink
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="Assigned Issues"
+                      to={"/dashboard/assigned-issues"}
+                    >
+                      <IoBriefcase>
+                        stroke="currentColor" className="my-1.5 inline-block
+                        size-4"
+                      </IoBriefcase>
+                      <span className="is-drawer-close:hidden">
+                        Assigned Issues
+                      </span>
+                    </NavLink>
+                  </li>
+                </>
+              )}
 
               <li>
                 <NavLink
@@ -119,64 +209,6 @@ const DashboardLayout = () => {
                     stroke="currentColor" className="my-1.5 inline-block size-4"
                   </FaUserCircle>
                   <span className="is-drawer-close:hidden">My Profile</span>
-                </NavLink>
-              </li>
-
-                <li>
-                <NavLink
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Report Issues"
-                  to={"/dashboard/report-issue"}
-                >
-                  <PiWarningCircleFill>
-                    stroke="currentColor" className="my-1.5 inline-block size-4"
-                  </PiWarningCircleFill>
-                  <span className="is-drawer-close:hidden">Report Issues</span>
-                </NavLink>
-              </li>
-
-              <li>
-                <NavLink
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="User Management"
-                  to={"/dashboard/user-management"}
-                >
-                  <FaUsers>
-                    stroke="currentColor" className="my-1.5 inline-block size-4"
-                  </FaUsers>
-                  <span className="is-drawer-close:hidden">
-                    User Management
-                  </span>
-                </NavLink>
-              </li>
-
-              <li>
-                <NavLink
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Staff Management"
-                  to={"/dashboard/staff-management"}
-                >
-                  <MdAssuredWorkload>
-                    stroke="currentColor" className="my-1.5 inline-block size-4"
-                  </MdAssuredWorkload>
-                  <span className="is-drawer-close:hidden">
-                    Staff Management
-                  </span>
-                </NavLink>
-              </li>
-
-              <li>
-                <NavLink
-                  className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
-                  data-tip="Assigned Issues"
-                  to={"/dashboard/assigned-issues"}
-                >
-                  <IoBriefcase>
-                    stroke="currentColor" className="my-1.5 inline-block size-4"
-                  </IoBriefcase>
-                  <span className="is-drawer-close:hidden">
-                    Assigned Issues
-                  </span>
                 </NavLink>
               </li>
 

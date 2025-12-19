@@ -69,7 +69,9 @@ const IssueCard = ({ issue }) => {
             <span className="badge badge-success badge-outline">Resolved</span>
           ) : IssueStatus === "Closed" ? (
             <span className="badge badge-neutral badge-outline">Closed</span>
-          ) : null}
+          ) : IssueStatus === "Rejected" ? (
+              <span className="badge badge-error badge-outline">Rejected</span>
+            ) : null}
 
           {Priority === "High" ? (
             <span className="badge badge-error badge-outline">

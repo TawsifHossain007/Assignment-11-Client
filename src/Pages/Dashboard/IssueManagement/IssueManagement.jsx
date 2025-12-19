@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 
 const IssueManagement = () => {
   const axiosSecure = useAxiosSecure();
-  const {refetch, data: issues = [] } = useQuery({
+  const { refetch, data: issues = [] } = useQuery({
     queryKey: ["issue-management"],
     queryFn: async () => {
       const res = await axiosSecure.get("/issues");
@@ -37,7 +37,7 @@ const IssueManagement = () => {
       .patch(`/issues/${selectedIssue._id}/assign`, staffAssignInfo)
       .then((res) => {
         if (res.data.modifiedCount) {
-            refetch()
+          refetch();
           staffModalRef.current.close();
           Swal.fire({
             position: "center",
@@ -45,6 +45,51 @@ const IssueManagement = () => {
             title: `Staff has been assigned`,
             showConfirmButton: false,
             timer: 2000,
+          });
+        }
+      });
+  };
+
+  const handleRejectIssue = (issueId) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Reject Issue!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          axiosSecure
+            .patch(`/issues/${issueId}/status`, { IssueStatus: "Rejected" })
+            .then((res) => {
+              if (res.data.modifiedCount) {
+                refetch();
+                swalWithBootstrapButtons.fire({
+                  title: "Rejected!",
+                  text: "Issue has been Rejected.",
+                  icon: "success",
+                });
+              }
+            });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            text: "Issue Rejection Cancelled",
+            icon: "error",
           });
         }
       });
@@ -80,7 +125,7 @@ const IssueManagement = () => {
                 <th>{index + 1}</th>
                 <td>{issue.title}</td>
                 <td>{issue.category}</td>
-                <td className="font-medium "> 
+                <td className="font-medium ">
                   <span
                     className={`badge badge-outline
       ${issue.IssueStatus === "Pending" && "badge-warning"}
@@ -88,6 +133,7 @@ const IssueManagement = () => {
       ${issue.IssueStatus === "Working" && "badge-primary"}
       ${issue.IssueStatus === "Resolved" && "badge-success"}
       ${issue.IssueStatus === "Closed" && "badge-neutral"}
+      ${issue.IssueStatus === "Rejected" && "badge-error"}
     `}
                   >
                     {issue.IssueStatus}
@@ -103,14 +149,43 @@ const IssueManagement = () => {
                   </span>
                 </td>
                 <td>
-                  {
-                    issue.staffName ? <><span className="text-green-500 font-medium text-center">Assigned</span></> : <><button
-                    onClick={()=>openStaffModal(issue)}
-                    className="btn btn-primary text-black"
-                  >
-                    Assign Staff
-                  </button></>
-                  }
+                  {issue.staffName ? (
+                    <>
+                      <span className="text-green-500 font-medium text-center">
+                        Assigned
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      {issue.IssueStatus !== "Rejected" && (
+                        <>
+                          <button
+                            onClick={() => openStaffModal(issue)}
+                            className="btn btn-primary text-black"
+                          >
+                            Assign Staff
+                          </button>
+                        </>
+                      )}
+                    </>
+                  )}
+                  {issue.IssueStatus === "Pending" && !(issue.staffName) &&  (
+                    <>
+                      <button
+                        onClick={() => handleRejectIssue(issue._id)}
+                        className="btn btn-primary text-black mx-2"
+                      >
+                        Reject Issue
+                      </button>
+                    </>
+                  )}
+                  {issue.IssueStatus === "Rejected" && (
+                    <>
+                      <span className="text-red-500 font-medium text-center">
+                        Rejected
+                      </span>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}
@@ -169,7 +244,10 @@ const IssueManagement = () => {
                     <td className="font-bold">{staff.email}</td>
                     <th>
                       <div className="tooltip" data-tip="Assign Staff">
-                        <button onClick={()=>handleAssignStaff(staff)} className="btn btn-error text-black">
+                        <button
+                          onClick={() => handleAssignStaff(staff)}
+                          className="btn btn-error text-black"
+                        >
                           Assign
                         </button>
                       </div>

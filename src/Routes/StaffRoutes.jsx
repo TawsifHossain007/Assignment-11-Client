@@ -1,0 +1,23 @@
+import React from 'react';
+import useAuth from '../hooks/useAuth/useAuth';
+import useRole from '../hooks/useRole/useRole';
+import Loading from '../Components/Loading/Loading';
+import Forbidden from '../Components/Forbidden/Forbidden';
+
+const StaffRoutes = ({children}) => {
+    const {loading} = useAuth()
+    const {role, roleLoading} = useRole()
+
+    if(loading || roleLoading){
+        return <Loading></Loading>
+    }
+
+    if(role !== 'staff'){
+        return <Forbidden></Forbidden>
+    }
+
+    return children
+    
+};
+
+export default StaffRoutes;

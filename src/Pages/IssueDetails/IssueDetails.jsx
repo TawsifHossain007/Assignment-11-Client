@@ -44,6 +44,14 @@ const IssueDetails = () => {
     },
   });
 
+    const {data : payments = []} = useQuery({
+    queryKey: ['boost-payments'],
+    queryFn: async() => {
+      const res = await axiosSecure.get('/payments');
+      return res.data;
+    }
+  })
+
   if (isLoading) return <Loading />;
 
   const {
@@ -132,9 +140,7 @@ const IssueDetails = () => {
       date: new Date().toISOString(),
     };
 
-    axiosSecure
-      .patch(`/issues/${selectedIssues._id}`, issueData)
-      .then((res) => {
+    axiosSecure.patch(`/issues/${selectedIssues._id}`, issueData).then((res) => {
         if (res.data.modifiedCount > 0) {
           Swal.fire({
             position: "Center",
@@ -148,6 +154,36 @@ const IssueDetails = () => {
         }
       });
   };
+
+  const handleBoost = (data) => {
+        Swal.fire({
+          title: "Boost Issue Priority",
+          text: "You will be charged 100 BDT",
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonText: "Pay 100৳",
+          cancelButtonText: "Cancel",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const paymentInfo = {
+              reporterName: user.displayName,
+              reporterEmail: user.email,
+              issueId: data._id,
+              issueName: data.title,
+              amount: 0.79,
+              subscriptionType: "Issue Boost",
+            };
+    
+            const res = await axiosSecure.post(
+              `/create-boost-checkout-session`,
+              paymentInfo
+            );
+            window.location.href = res.data.url;
+          }
+        });
+  }
+
+  const boostedPayment = payments.find(payment => payment.IssueId === id)
 
   return (
     <div className="min-h-screen max-w-6xl mx-auto px-4 py-10 space-y-10">
@@ -187,6 +223,8 @@ const IssueDetails = () => {
               </span>
             ) : IssueStatus === "Closed" ? (
               <span className="badge badge-neutral badge-outline">Closed</span>
+            ) : IssueStatus === "Rejected" ? (
+              <span className="badge badge-error badge-outline">Rejected</span>
             ) : null}
 
             {Priority === "High" ? (
@@ -250,7 +288,7 @@ const IssueDetails = () => {
                 </button>
 
                 {Priority !== "High" && (
-                  <button className="btn btn-outline btn-warning gap-2">
+                  <button onClick={()=>handleBoost(issue)} className="btn btn-outline btn-warning gap-2">
                     <FaBolt /> Boost Priority (৳100)
                   </button>
                 )}
@@ -274,7 +312,7 @@ const IssueDetails = () => {
             </p>
           </li>
 
-          {IssueStatus !== "Pending" && (
+          {staffName && (
             <li>
               <p className="text-sm text-gray-500">Assigned</p>
               <p className="text-gray-700">
@@ -283,23 +321,51 @@ const IssueDetails = () => {
             </li>
           )}
 
+          {IssueStatus === "In Progress" && (
+              <li>
+              <p className="text-sm text-gray-500">Update</p>
+              <p className="text-gray-700">
+                Work Marked as <b>In Progress</b>
+              </p>
+            </li>
+          )}
+
           {IssueStatus === "Working" && (
+            <>
+            <li>
+              <p className="text-sm text-gray-500">Update</p>
+              <p className="text-gray-700">
+                Work Marked as <b>In Progress</b>
+              </p>
+            </li>
+
             <li>
               <p className="text-sm text-gray-500">Update</p>
               <p className="text-gray-700">
                 Work Marked as <b>Working</b>
               </p>
             </li>
+            </>
+            
+
+            
           )}
 
           {IssueStatus === "Resolved" && (
             <>
               <li>
-                <p className="text-sm text-gray-500">Update</p>
-                <p className="text-gray-700">
-                  Work Marked as <b>Working</b>
-                </p>
-              </li>
+              <p className="text-sm text-gray-500">Update</p>
+              <p className="text-gray-700">
+                Work Marked as <b>In Progress</b>
+              </p>
+            </li>
+
+            <li>
+              <p className="text-sm text-gray-500">Update</p>
+              <p className="text-gray-700">
+                Work Marked as <b>Working</b>
+              </p>
+            </li>
 
               <li>
                 <p className="text-sm text-gray-500">Update</p>
@@ -312,12 +378,19 @@ const IssueDetails = () => {
 
           {IssueStatus === "Closed" && (
             <>
-              <li>
-                <p className="text-sm text-gray-500">Update</p>
-                <p className="text-gray-700">
-                  Work Marked as <b>Working</b>
-                </p>
-              </li>
+               <li>
+              <p className="text-sm text-gray-500">Update</p>
+              <p className="text-gray-700">
+                Work Marked as <b>In Progress</b>
+              </p>
+            </li>
+
+            <li>
+              <p className="text-sm text-gray-500">Update</p>
+              <p className="text-gray-700">
+                Work Marked as <b>Working</b>
+              </p>
+            </li>
 
               <li>
                 <p className="text-sm text-gray-500">Update</p>
@@ -334,6 +407,17 @@ const IssueDetails = () => {
               </li>
             </>
           )}
+
+          {
+            boostedPayment && <>
+              <li>
+                <p className="text-sm text-gray-500">Boost</p>
+                <p className="text-gray-700">
+                  Issue Boosted at <b>{new Date(boostedPayment.paymentDate).toLocaleString()}</b>
+                </p>
+              </li>
+            </>
+          }
 
           <li>
             <p className="text-sm text-gray-500">Priority</p>

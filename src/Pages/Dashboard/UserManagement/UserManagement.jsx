@@ -159,6 +159,10 @@ const UserManagement = () => {
           ? "bg-red-50 text-red-600 border-red-200"
           : "bg-emerald-50 text-emerald-600 border-emerald-200"
       }
+      ${
+        user.status === "Premium"
+          ? "bg-yellow-50 text-yellow-600 border-yellow-200" : ""
+      }
     `}
                       >
                         {user.status}

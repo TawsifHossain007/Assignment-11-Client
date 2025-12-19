@@ -80,11 +80,9 @@ const StaffManagement = () => {
       console.error(err);
       setLoading(false);
       Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Failed to add staff",
-        text: err.message,
-        showConfirmButton: true,
+        title: "Staff Added",
+        text: `You are now signed in as ${data.name}`,
+        icon: "success",
       });
       navigate("/dashboard/staff-management");
     }
@@ -437,7 +435,7 @@ const StaffManagement = () => {
                 <label className="label">Photo</label>
                 <input
                   type="file"
-                  {...register("photo", {required:true})}
+                  {...register("photo", { required: true })}
                   className="file-input bg-green-200"
                   placeholder="Your Photo"
                 />

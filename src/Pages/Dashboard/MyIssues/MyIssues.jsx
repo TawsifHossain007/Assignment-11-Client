@@ -28,7 +28,6 @@ const MyIssues = () => {
   const [selectedIssues, setSelectedIssues] = useState(null);
 
   const handelDeleteIssue = (id) => {
-
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success",
@@ -144,7 +143,20 @@ const MyIssues = () => {
               <tr key={issue._id}>
                 <th>{index + 1}</th>
                 <td className="font-semibold">{issue.title}</td>
-                <td>{issue.IssueStatus}</td>
+                <td>
+                  <span
+                    className={`badge badge-outline
+      ${issue.IssueStatus === "Pending" && "badge-warning"}
+      ${issue.IssueStatus === "In Progress" && "badge-info"}
+      ${issue.IssueStatus === "Working" && "badge-primary"}
+      ${issue.IssueStatus === "Resolved" && "badge-success"}
+      ${issue.IssueStatus === "Closed" && "badge-neutral"}
+      ${issue.IssueStatus === "Rejected" && "badge-error"}
+    `}
+                  >
+                    {issue.IssueStatus}
+                  </span>
+                </td>
                 <td className="font-semibold">{issue.category}</td>
                 <td>{issue.location}</td>
                 <td>
@@ -163,11 +175,10 @@ const MyIssues = () => {
                     </button>
                   )}
                   <Link to={`/issue-details/${issue._id}`}>
-                      <button className="btn mx-2 btn-primary text-black">
-                    View Details
-                  </button>
+                    <button className="btn mx-2 btn-primary text-black">
+                      View Details
+                    </button>
                   </Link>
-                  
                 </td>
               </tr>
             ))}
