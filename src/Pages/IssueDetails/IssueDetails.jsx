@@ -312,6 +312,13 @@ const IssueDetails = () => {
             </p>
           </li>
 
+          <li>
+            <p className="text-sm text-gray-500">Created</p>
+            <p className="text-gray-700">
+              Issue was created at <b>{new Date(date).toLocaleString()}</b>
+            </p>
+          </li>
+
           {staffName && (
             <li>
               <p className="text-sm text-gray-500">Assigned</p>

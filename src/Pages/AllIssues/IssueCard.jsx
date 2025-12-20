@@ -1,9 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaArrowUp, FaMapMarkerAlt } from "react-icons/fa";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth/useAuth";
 import useAxiosSecure from "../../hooks/useAuth/useAxiosSecure";
 import Loading from "../../Components/Loading/Loading";
+import Swal from "sweetalert2";
 
 const IssueCard = ({ issue }) => {
   const {
@@ -15,8 +16,23 @@ const IssueCard = ({ issue }) => {
     Priority,
     location,
     VoteCount,
+    reporterEmail
   } = issue;
 
+  const queryClient = useQueryClient();
+
+  const upvoteMutation = useMutation({
+    mutationFn: async () => {
+      return axiosSecure.patch(`/issues/${_id}/upvote`, {
+        userEmail: user.email,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["issues"]);
+    },
+  });
+
+  const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
   const { data: currentUser = {}, isLoading } = useQuery({
@@ -31,6 +47,15 @@ const IssueCard = ({ issue }) => {
   if (isLoading) {
     return <Loading></Loading>;
   }
+
+  const handleUpvote = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    upvoteMutation.mutate();
+  };
 
   return (
     <div
@@ -70,8 +95,8 @@ const IssueCard = ({ issue }) => {
           ) : IssueStatus === "Closed" ? (
             <span className="badge badge-neutral badge-outline">Closed</span>
           ) : IssueStatus === "Rejected" ? (
-              <span className="badge badge-error badge-outline">Rejected</span>
-            ) : null}
+            <span className="badge badge-error badge-outline">Rejected</span>
+          ) : null}
 
           {Priority === "High" ? (
             <span className="badge badge-error badge-outline">
@@ -94,8 +119,11 @@ const IssueCard = ({ issue }) => {
         {/* Footer */}
         <div className="flex items-center justify-between">
           {/* Upvote */}
-          {currentUser.status !== "Blocked" && (
-            <button className="flex items-center gap-1 text-sm text-gray-700 hover:text-green-700 transition">
+          {currentUser.status !== "Blocked" && currentUser.email !== reporterEmail && (
+            <button
+              onClick={handleUpvote}
+              className="flex items-center gap-1 text-sm text-gray-700 hover:text-green-700 transition"
+            >
               <FaArrowUp />
               <span>{VoteCount}</span>
             </button>
