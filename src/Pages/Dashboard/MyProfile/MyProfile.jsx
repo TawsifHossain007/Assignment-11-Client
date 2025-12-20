@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useRef } from "react";
 
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../../hooks/useAuth/useAxiosSecure";
 import useAuth from "../../../hooks/useAuth/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import useRole from "../../../hooks/useRole/useRole";
+import axios from "axios";
+import { useForm } from "react-hook-form";
 
 const MyProfile = () => {
-  const { user } = useAuth();
+  const { user, updateUserProfile } = useAuth();
   const axiosSecure = useAxiosSecure();
   const { role } = useRole();
-  const { data: crntuser = [] } = useQuery({
+  const { data: crntuser = [],refetch } = useQuery({
     queryKey: ["my-profile", user?.email],
     queryFn: async () => {
       const res = await axiosSecure.get(`/users/${user?.email}/role`);
@@ -31,7 +33,7 @@ const MyProfile = () => {
         const paymentInfo = {
           reporterName: user.displayName,
           reporterEmail: user.email,
-          amount: 7.96,
+          amount: 1000,
           subscriptionType: "Profile Subscription",
         };
 
@@ -43,6 +45,60 @@ const MyProfile = () => {
       }
     });
   };
+
+  const updateUserModalRef = useRef();
+
+    const openUpdateUserModal = (user) => {
+
+    reset({
+      name: user.displayName,
+      photo: "",
+    });
+    updateUserModalRef.current.showModal();
+  };
+
+  const handleUpdateUser = async (data) => {
+    const imageFile = data.photo[0];
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
+    const ImageApiURL = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_Image_Host_Key
+    }`;
+
+    const imgRes = await axios.post(ImageApiURL, formData);
+    const imageUrl = imgRes.data.data.url;
+
+    //prepare data
+    const staffData = {
+      contact: data.contact,
+      photoURL: imageUrl,
+      displayName: data.name,
+    };
+    await updateUserProfile({ displayName: data.name, imageUrl });
+
+    axiosSecure.patch(`/users/${crntuser._id}`, staffData).then((res) => {
+      if (res.data.modifiedCount > 0) {
+        Swal.fire({
+          position: "Center",
+          icon: "success",
+          title: "Staff Information Has Been Updated",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+                updateUserModalRef.current.close();
+
+        refetch();
+      }
+    });
+  };
+
+    const {
+      reset,
+      register,
+      handleSubmit,
+      formState: { errors },
+    } = useForm();
 
   return (
     <div className="max-w-3xl mx-auto mt-10 min-h-screen">
@@ -109,16 +165,14 @@ const MyProfile = () => {
           </div>
 
           <div className="w-full border-t my-6 border-green-200"></div>
-
+          {/* Update Profile Button */}
+          <button onClick={()=>openUpdateUserModal(crntuser)} className="btn bg-green-600 text-white hover:bg-green-700">
+            Update Profile
+          </button>
           {/* Buttons */}
           {role === "user" && (
             <>
               <div className="flex gap-4">
-                {/* Update Profile Button */}
-                <button className="btn bg-green-600 text-white hover:bg-green-700">
-                  Update Profile
-                </button>
-
                 {/* Subscribe Button */}
                 {crntuser?.status !== "Premium" && (
                   <button
@@ -133,6 +187,65 @@ const MyProfile = () => {
           )}
         </div>
       </div>
+       {/* Update Modal */}
+      <dialog
+        ref={updateUserModalRef}
+        className="modal modal-bottom sm:modal-middle"
+      >
+        <div className="modal-box">
+          <div className="card bg-white w-full mx-auto max-w-sm shrink-0 shadow-2xl p-5">
+            <h3 className="text-center font-semibold text-3xl text-secondary">
+              Update Staff
+            </h3>
+            <p className="text-center pt-3">
+              Build a team to keep the city running smoothly.
+            </p>
+            <form
+              onSubmit={handleSubmit(handleUpdateUser)}
+              className="card-body"
+            >
+              <fieldset className="fieldset">
+                {/* name */}
+                <label className="label">Name</label>
+                <input
+                  type="text"
+                  {...register("name")}
+                  className="input bg-green-200"
+                  placeholder="Staff Name"
+                />
+                {errors.name?.type === "required" && (
+                  <p className="text-red-500 text-sm font-medium mt-1">
+                    Name is Required
+                  </p>
+                )}
+
+                {/* Photo */}
+                <label className="label">Photo</label>
+                <input
+                  type="file"
+                  {...register("photo", { required: true })}
+                  className="file-input bg-green-200"
+                  placeholder="Your Photo"
+                />
+                {errors.photo?.type === "required" && (
+                  <p className="text-red-500 text-sm font-medium mt-1">
+                    Photo is Required
+                  </p>
+                )}
+                <button onClick={handleUpdateUser} type="submit" className="btn btn-neutral mt-4">
+                  Update Staff
+                </button>
+              </fieldset>
+            </form>
+          </div>
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };

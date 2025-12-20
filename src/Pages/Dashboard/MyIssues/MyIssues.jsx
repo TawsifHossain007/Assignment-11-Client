@@ -18,6 +18,15 @@ const MyIssues = () => {
     },
   });
 
+  const { data: currentUser = {} } = useQuery({
+      queryKey: ["current-user", user?.email],
+      enabled: !!user?.email,
+      queryFn: async () => {
+        const res = await axiosSecure.get(`/users/${user.email}/role`);
+        return res.data;
+      },
+    });
+
   const {
     reset,
     register,
@@ -166,7 +175,7 @@ const MyIssues = () => {
                   >
                     Delete
                   </button>
-                  {issue.IssueStatus === "Pending" && (
+                  {issue.IssueStatus === "Pending" && currentUser.status !== 'Blocked' && (
                     <button
                       onClick={() => openIssueEditModal(issue)}
                       className="btn btn-primary text-black mx-2"

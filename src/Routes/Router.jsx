@@ -25,6 +25,7 @@ import PaymentSuccess from "../Components/Payment-Success/PaymentSuccess";
 import PaymentCancel from "../Components/Payment-Cancelled/PaymentCancel";
 import UserRoutes from "./UserRoutes";
 import BoostPaymentSuccess from "../Components/Payment-Success/BoostPaymentSuccess";
+import PaymentHistory from "../Pages/Dashboard/PaymentHistory/PaymentHistory";
 
 export const router = createBrowserRouter([
   {
@@ -99,6 +100,10 @@ export const router = createBrowserRouter([
         {
             path: 'issue-management',
             element: <AdminRoutes><IssueManagement></IssueManagement></AdminRoutes>
+        },
+        {
+            path: 'payment-history',
+            element: <AdminRoutes><PaymentHistory></PaymentHistory></AdminRoutes>
         },
         {
             path: 'assigned-issues',

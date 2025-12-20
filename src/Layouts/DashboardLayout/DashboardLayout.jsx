@@ -14,6 +14,7 @@ import { MdAssuredWorkload, MdReportGmailerrorred } from "react-icons/md";
 import { PiWarningCircleFill } from "react-icons/pi";
 import { Link, NavLink, Outlet } from "react-router";
 import useRole from "../../hooks/useRole/useRole";
+import { HiCurrencyBangladeshi, HiCurrencyDollar } from "react-icons/hi";
 
 const DashboardLayout = () => {
   const { role } = useRole();
@@ -172,6 +173,22 @@ const DashboardLayout = () => {
                       </MdAssuredWorkload>
                       <span className="is-drawer-close:hidden">
                         Staff Management
+                      </span>
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink
+                      className="is-drawer-close:tooltip is-drawer-close:tooltip-right"
+                      data-tip="Payment History"
+                      to={"/dashboard/payment-history"}
+                    >
+                      <HiCurrencyDollar>
+                        stroke="currentColor" className="my-1.5 inline-block
+                        size-4"
+                      </HiCurrencyDollar>
+                      <span className="is-drawer-close:hidden">
+                        Payment History
                       </span>
                     </NavLink>
                   </li>

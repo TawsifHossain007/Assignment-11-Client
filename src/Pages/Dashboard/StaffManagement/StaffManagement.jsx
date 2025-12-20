@@ -104,7 +104,6 @@ const StaffManagement = () => {
 
     //prepare data
     const staffData = {
-      email: data.email,
       contact: data.contact,
       photoURL: imageUrl,
       displayName: data.name,

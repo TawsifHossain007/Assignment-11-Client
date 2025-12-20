@@ -25,6 +25,15 @@ const IssueDetails = () => {
   const issueModalRef = useRef();
   const [selectedIssues, setSelectedIssues] = useState(null);
 
+    const { data: currentUser = {} } = useQuery({
+      queryKey: ["current-user", user?.email],
+      enabled: !!user?.email,
+      queryFn: async () => {
+        const res = await axiosSecure.get(`/users/${user.email}/role`);
+        return res.data;
+      },
+    });
+
   const {
     reset,
     register,
@@ -170,7 +179,7 @@ const IssueDetails = () => {
               reporterEmail: user.email,
               issueId: data._id,
               issueName: data.title,
-              amount: 0.79,
+              amount: 100,
               subscriptionType: "Issue Boost",
             };
     
@@ -287,7 +296,7 @@ const IssueDetails = () => {
                   <FaTrash /> Delete
                 </button>
 
-                {Priority !== "High" && (
+                {Priority !== "High" && currentUser.status !== 'Blocked' && (
                   <button onClick={()=>handleBoost(issue)} className="btn btn-outline btn-warning gap-2">
                     <FaBolt /> Boost Priority (৳100)
                   </button>
