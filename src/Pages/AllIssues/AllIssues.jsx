@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import useAxiosSecure from "../../hooks/useAuth/useAxiosSecure";
 import IssueCard from "./IssueCard";
@@ -7,11 +7,15 @@ import Loading from "../../Components/Loading/Loading";
 
 const AllIssues = () => {
   const axiosSecure = useAxiosSecure();
-  const { data: issues = [], isLoading } = useQuery({
-    queryKey: ["all-issues"],
+  const [searchText, setSearchText] = useState('');
+
+  const { data: issues, isLoading } = useQuery({
+    queryKey: ["all-issues", searchText],
+    initialData: [],
     queryFn: async () => {
-      const res = await axiosSecure.get("/issues");
-      return [...res.data].sort((a, b) => {
+      const res = await axiosSecure.get(`/issues?searchText=${searchText}`);
+      return res.data
+      .sort((a, b) => {
         if (a.Priority === "High" && b.Priority !== "High") return -1;
         if (a.Priority !== "High" && b.Priority === "High") return 1;
         return 0;
@@ -19,9 +23,10 @@ const AllIssues = () => {
     },
   });
 
-  if (isLoading) {
-    return <Loading></Loading>;
-  }
+  // if (isLoading) {
+  //   return <Loading></Loading>;
+  // }  
+  console.log(issues);
 
   return (
     <div className="min-h-screen max-w-11/12 mx-auto mb-20">
@@ -39,9 +44,29 @@ const AllIssues = () => {
         </p>
       </motion.div>
 
+       <label className="input mb-10 mt-10">
+        <svg
+          className="h-[1em] opacity-50"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <g
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="2.5"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </g>
+        </svg>
+        <input onChange={(e)=> setSearchText(e.target.value)} type="search" className="grow" placeholder="Search Issues" />
+      </label>
+
       {/* Cards stagger animation */}
       <motion.div
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20"
+        className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-15"
         initial="hidden"
         animate="visible"
         variants={{
@@ -54,7 +79,7 @@ const AllIssues = () => {
         }}
       >
         {issues.map((issue) => (
-          <motion.div
+          <div
             key={issue._id}
             variants={{
               hidden: { opacity: 0, y: 20 },
@@ -63,7 +88,7 @@ const AllIssues = () => {
             transition={{ duration: 0.4, ease: "easeOut" }}
           >
             <IssueCard issue={issue}></IssueCard>
-          </motion.div>
+          </div>
         ))}
       </motion.div>
     </div>
