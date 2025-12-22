@@ -1,16 +1,38 @@
-# React + Vite
+# Website Name: CivicReport
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Live Site:** [Your Live Site URL]  
 
-Currently, two official plugins are available:
+**Admin Credentials:**  
+- **Email:** haalandbhai@gmail.com  
+- **Password:** T@wsif
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Overview
+This is a web-based management system designed to streamline staff management, issue tracking, and payment processing. The website provides a clean, responsive interface for admins and users, along with real-time updates and analytics.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Features
+- **Admin Dashboard:** Access and manage all aspects of the website from a centralized dashboard.  
+- **Staff Management:** Add, update, or remove staff members with ease. Includes name, contact number, email, and profile photo.  
+- **Issue Tracking System:** Submit, track, and update issues reported by staff or users.  
+- **Payment Integration:** Boost subscriptions or service payments using Stripe with real-time payment confirmation.  
+- **Search & Filter Functionality:** Quickly find staff or issues using search and filter options.  
+- **User Authentication:** Secure login system for both admin and staff accounts.  
+- **Profile Management:** Staff can update their profiles, including display picture and personal information.  
+- **Notifications & Alerts:** Receive notifications for new issues, updates, or payment confirmations.  
+- **Responsive Design:** Works seamlessly across desktops, tablets, and mobile devices.  
+- **Analytics & Reports:** Track staff activity, issue resolution status, and payment history in a structured manner.  
+- **Secure Backend:** Data is stored securely with proper authentication and authorization mechanisms.  
+- **Integration Ready:** Easily extendable with additional features, third-party APIs, or modules.  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Tech Stack
+
+- **Frontend**: React, Tailwind CSS, DaisyUI, Framer Motion
+- **Backend**: Node.js, Express
+- **Database**: MongoDB
+- **Authentication**: Firebase Authentication
+- **Payment** Gateway: Stripe
