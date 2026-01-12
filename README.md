@@ -3,7 +3,7 @@
 **Live Site:** https://velvety-churros-37a21c.netlify.app/  
 
 **Admin Credentials:**  
-- **Email:** haalandbhai@gmail.com  
+- **Email:** kevin@gmail.com  
 - **Password:** T@wsif
 
 ---
